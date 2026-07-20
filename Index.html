@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generador de Horario - 5to Semestre 2026</title>
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; margin: 20px; background-color: #f0f2f5; color: #333; }
+    
+    /* Encabezado flex para alinear título y música en la parte superior */
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #1a3a5a;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    h2 { color: #1a3a5a; margin: 0; border: none; padding: 0; }
+
+    /* Control de audio integrado en la parte superior */
+    .audio-control {
+      background: #1a3a5a;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .audio-btn {
+      background: #0d47a1;
+      border: none;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: bold;
+      transition: background 0.2s;
+    }
+    .audio-btn:hover { background: #1565c0; }
+
+    .seccion-titulo { font-size: 14px; font-weight: bold; color: #1a3a5a; margin-top: 15px; margin-bottom: 10px; border-left: 4px solid #1a3a5a; padding-left: 8px; }
+    .controles { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+    .grid-obligatorios { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; }
+    label { font-weight: bold; font-size: 13px; display: block; margin-bottom: 5px; }
+    select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; background-color: #fafafa; }
+    .optativos-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 10px; background: #f8f9fa; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px; }
+    .optativo-item { font-size: 12px; background: #ffffff; padding: 8px; border-radius: 4px; border: 1px solid #ddd; display: flex; align-items: flex-start; gap: 8px; }
+    .optativo-item input[type="checkbox"] { margin-top: 2px; cursor: pointer; }
+    .optativo-item label { font-weight: normal; font-size: 12px; margin-bottom: 0; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 11px; }
+    th { background-color: #1a3a5a; color: white; text-transform: uppercase; letter-spacing: 1px; }
+    .bloque { background-color: #e3f2fd; font-weight: bold; color: #0d47a1; border: 1px solid #90caf9; }
+    .conflicto { background-color: #ffebee; color: #b71c1c; border: 2px solid #ef5350; animation: flash 1s infinite; }
+    @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+    #alerta { color: #b71c1c; background-color: #ffcdd2; border: 1px solid #ef9a9a; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: none; font-weight: bold; }
+    #resumen-online { background-color: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px; font-size: 12px; display: none; }
+    .footer { margin-top: 20px; font-size: 11px; color: #666; text-align: right; }
+  </style>
+</head>
+<body>
+
+<div class="header-container">
+  <h2>📘 Generador de Horario - 5to Semestre 2026</h2>
+  <div class="audio-control">
+    <span>🎵 Música de fondo</span>
+    <button id="btn-audio" class="audio-btn" onclick="toggleAudio()">Reproducir</button>
+  </div>
+</div>
+
+<div id="alerta"></div>
+<div id="resumen-online"></div>
+
+<div class="controles">
+  <div class="seccion-titulo">📌 Asignaturas Obligatorias</div>
+  <div class="grid-obligatorios">
+    <div>
+      <label>🍰 Alta Pastelería y Repostería (APG1101)</label>
+      <select id="pasteleria" class="selector-obligatorio">
+        <option value="">-- Seleccionar Sección --</option>
+        <option value="Lu-8-13:ALTA PASTELERÍA">APG1101-001D – Díaz (Lu 13:41-18:10)</option>
+        <option value="Lu-1-6:ALTA PASTELERÍA">APG1101-002D – Díaz (Lu 08:31-12:50)</option>
+        <option value="Ma-8-13:ALTA PASTELERÍA">APG1101-003D – Guerrero (Ma 13:41-18:10)</option>
+        <option value="Ma-1-6:ALTA PASTELERÍA">APG1101-004D – Díaz (Ma 08:31-12:50)</option>
+        <option value="Mi-8-13:ALTA PASTELERÍA">APG1101-005D – Tapia (Mi 13:41-18:10)</option>
+        <option value="Mi-1-6:ALTA PASTELERÍA">APG1101-006D – Díaz (Mi 08:31-12:50)</option>
+        <option value="Ju-8-13:ALTA PASTELERÍA">APG1101-007D – Tapia (Ju 13:41-18:10)</option>
+        <option value="Ju-1-6:ALTA PASTELERÍA">APG1101-008D – Díaz (Ju 08:31-12:50)</option>
+        <option value="Vi-1-6:ALTA PASTELERÍA">APG1101-009D – Guerrero (Vi 08:31-12:50)</option>
+      </select>
+    </div>
+
+    <div>
+      <label>🍽️ Cocina de Alta Gama (AAG1101)</label>
+      <select id="cocina" class="selector-obligatorio">
+        <option value="">-- Seleccionar Sección --</option>
+        <option value="Lu-1-6:COCINA ALTA GAMA">AAG1101-001D – Aceituno (Lu 08:31-12:50)</option>
+        <option value="Lu-8-13:COCINA ALTA GAMA">AAG1101-002D – Valdivia (Lu 13:41-18:10)</option>
+        <option value="Ma-1-6:COCINA ALTA GAMA">AAG1101-003D – Santamaría (Ma 08:31-12:50)</option>
+        <option value="Ma-8-13:COCINA ALTA GAMA">AAG1101-004D – Carrasco (Ma 13:41-18:10)</option>
+        <option value="Mi-1-6:COCINA ALTA GAMA">AAG1101-005D – Aceituno (Mi 08:31-12:50)</option>
+        <option value="Mi-8-13:COCINA ALTA GAMA">AAG1101-006D – Aceituno (Mi 13:41-18:10)</option>
+        <option value="Ju-1-6:COCINA ALTA GAMA">AAG1101-007D – Santamaría (Ju 08:31-12:50)</option>
+        <option value="Ju-8-13:COCINA ALTA GAMA">AAG1101-008D – Valdivia (Ju 13:41-18:10)</option>
+        <option value="Vi-8-13:COCINA ALTA GAMA">AAG1101-009D – Carrasco (Vi 13:41-18:10)</option>
+      </select>
+    </div>
+
+    <div>
+      <label>🗣️ Inglés Elemental II (INU4101)</label>
+      <select id="ingles" class="selector-obligatorio">
+        <option value="">-- Seleccionar Sección --</option>
+        <option value="Mi-6-7:INGLÉS II|Ju-3-4:INGLÉS II">INU4101-001D – Del Pino (Mi 12:11-13:40 / Ju 10:01-11:20)</option>
+        <option value="Lu-10-11:INGLÉS II|Mi-9-10:INGLÉS II">INU4101-002D – Betancourt (Lu 15:11-16:40 / Mi 14:31-15:50)</option>
+        <option value="Lu-8-9:INGLÉS II|Ma-12-13:INGLÉS II">INU4101-003D – Valderas (Lu 13:41-15:10 / Ma 16:41-18:10)</option>
+        <option value="Mi-5-6:INGLÉS II|Vi-3-4:INGLÉS II">INU4101-004D – Fierro (Mi 11:31-12:50 / Vi 10:01-11:20)</option>
+      </select>
+    </div>
+
+    <div>
+      <label>💡 Innovación Empresas Gastronómicas (DPG1106)</label>
+      <select id="innovacion" class="selector-obligatorio">
+        <option value="">-- Seleccionar Sección --</option>
+        <option value="Mi-9-11:INNOVACIÓN">DPG1106-001D – Alarcón (Mi 14:31-16:40)</option>
+        <option value="Lu-6-8:INNOVACIÓN">DPG1106-002D – Carrasco (Lu 12:11-14:20)</option>
+        <option value="Ma-9-11:INNOVACIÓN">DPG1106-003D – Olfos (Ma 14:31-16:40)</option>
+        <option value="Vi-6-8:INNOVACIÓN">DPG1106-004D – Olfos (Vi 12:11-14:20)</option>
+        <option value="Ju-9-11:INNOVACIÓN">DPG1106-005D – Olfos (Ju 14:31-16:40)</option>
+      </select>
+    </div>
+
+    <div>
+      <label>🍳 Taller Habilidades Gastronomía III (HGG1103)</label>
+      <select id="habilidades" class="selector-obligatorio">
+        <option value="">-- Seleccionar Sección --</option>
+        <option value="Ju-5-7:HABILIDADES III">HGG1103-001D – Michaud (Ju 11:31-13:40)</option>
+        <option value="Mi-12-14:HABILIDADES III">HGG1103-002D – Michaud (Mi 16:41-18:50)</option>
+        <option value="Lu-10-12:HABILIDADES III">HGG1103-003D – Michaud (Lu 15:11-17:20)</option>
+        <option value="Mi-7-9:HABILIDADES III">HGG1103-004D – Michaud (Mi 13:01-15:10)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="seccion-titulo">🎨 Cursos Optativos (Puedes marcar múltiples para evaluar combinación)</div>
+  <div class="optativos-container">
+    <div class="optativo-item">
+      <input type="checkbox" id="opt1" class="check-optativo" value="Lu-3-5:GASTR. CONSCIENTE|Ju-9-11:GASTR. CONSCIENTE">
+      <label for="opt1"><strong>GCG1101-003D</strong> – Gastronomía Consciente (Muñoz - Lu 10:01-12:10 / Ju 14:31-16:40)</label>
+    </div>
+    <div class="optativo-item">
+      <input type="checkbox" id="opt2" class="check-optativo" value="Ju-11-14:INNOV. DESAFÍOS">
+      <label for="opt2"><strong>EMP0010-004D</strong> – Innovación Basada en Desafíos (Pérez - Ju 16:01-18:50)</label>
+    </div>
+    <div class="optativo-item">
+      <input type="checkbox" id="opt3" class="check-optativo" value="Mi-8-12:CULTURA Y GASTR.">
+      <label for="opt3"><strong>CGT010-002D</strong> – Cultura y Gastronomía (Farías - Mi 13:41-17:20)</label>
+    </div>
+    <div class="optativo-item">
+      <input type="checkbox" id="opt4" class="check-optativo" value="Mi-3-4:ALFABETIZACIÓN">
+      <label for="opt4"><strong>ALI0010-004D</strong> – Alfabetización Informacional (Vega - Mi 10:01-11:20)</label>
+    </div>
+    <div class="optativo-item">
+      <input type="checkbox" id="opt5" class="check-optativo" value="Ma-3-6:INNOV. DESAFÍOS (SYNC)">
+      <label for="opt5"><strong>EMP0010-885D</strong> – Innov. Desafíos [Online Sincrónico] (Olivares - Ma 10:01-12:50)</label>
+    </div>
+    <div class="optativo-item">
+      <input type="checkbox" id="opt6" class="check-optativo" value="Vi-1-4:MARCA PERSONAL (SYNC)">
+      <label for="opt6"><strong>GMP0101-883D</strong> – Marca Personal [Online Sincrónico] (Pérez - Vi 08:31-11:20)</label>
+    </div>
+    <div class="optativo-item">
+      <input type="checkbox" id="opt7" class="check-optativo" value="ONLINE:BIW0020-003D - Búsqueda Efectiva de Info.">
+      <label for="opt7"><strong>BIW0020-003D</strong> – Búsqueda Efectiva de Info. (Valencia - Online Asincrónico)</label>
+    </div>
+    <div class="optativo-item">
+      <input type="checkbox" id="opt8" class="check-optativo" value="ONLINE:BIW0020-004D - Búsqueda Efectiva de Info.">
+      <label for="opt8"><strong>BIW0020-004D</strong> – Búsqueda Efectiva de Info. (Valencia - Online Asincrónico)</label>
+    </div>
+    <div class="optativo-item">
+      <input type="checkbox" id="opt9" class="check-optativo" value="ONLINE:ALI0010-004D - Alfabetización Informacional (Módulo Asincrónico)">
+      <label for="opt9"><strong>ALI0010-004D</strong> – Alfabetización Informacional (Parte Asincrónica - Vega)</label>
+    </div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Hora</th>
+      <th>Lunes</th>
+      <th>Martes</th>
+      <th>Miércoles</th>
+      <th>Jueves</th>
+      <th>Viernes</th>
+    </tr>
+  </thead>
+  <tbody id="tabla"></tbody>
+</table>
+
+<!-- Audio MP3 local sin anuncios -->
+<audio id="bg-music" loop src="musica.mp3"></audio>
+
+<div class="footer">Generador de Horario 2026 | Detección automática de topes de horario activa.</div>
+
+<script>
+const rangos = [
+  "08:31–09:10","09:11–09:50","10:01–10:40","10:41–11:20",
+  "11:31–12:10","12:11–12:50","13:01–13:40","13:41–14:20",
+  "14:31–15:10","15:11–15:50","16:01–16:40","16:41–17:20",
+  "17:31–18:10","18:11–18:50"
+];
+const dias = ["Lu","Ma","Mi","Ju","Vi"];
+const tabla = document.getElementById("tabla");
+const alerta = document.getElementById("alerta");
+const resumenOnline = document.getElementById("resumen-online");
+let ocupado = {};
+let asincronicos = [];
+
+// Construcción dinámica de filas
+rangos.forEach((hora, i) => {
+  const fila = document.createElement("tr");
+  const celdaHora = document.createElement("td");
+  celdaHora.textContent = hora;
+  fila.appendChild(celdaHora);
+  dias.forEach(d => {
+    const celda = document.createElement("td");
+    celda.dataset.dia = d;
+    celda.dataset.modulo = i + 1;
+    fila.appendChild(celda);
+  });
+  tabla.appendChild(fila);
+});
+
+function pintar(valor) {
+  if (!valor) return;
+  
+  if (valor.startsWith("ONLINE:")) {
+    asincronicos.push(valor.replace("ONLINE:", ""));
+    return;
+  }
+
+  const partes = valor.split("|");
+  partes.forEach(v => {
+    const [bloque, nombre] = v.split(":");
+    const [dia, desde, hasta] = bloque.split("-");
+    for (let i = parseInt(desde); i <= parseInt(hasta); i++) {
+      const clave = dia + "-" + i;
+      const celda = document.querySelector(`td[data-dia="${dia}"][data-modulo="${i}"]`);
+      if (celda) {
+        if (ocupado[clave]) {
+          celda.classList.add("conflicto");
+          alerta.style.display = "block";
+          alerta.innerHTML += `⚠️ TOPE DETECTADO: <strong>${ocupado[clave]}</strong> choca con <strong>${nombre}</strong> el ${dia} a las ${rangos[i-1]}<br>`;
+        } else {
+          celda.classList.add("bloque");
+          celda.textContent = nombre;
+          ocupado[clave] = nombre;
+        }
+      }
+    }
+  });
+}
+
+function actualizar() {
+  document.querySelectorAll("td").forEach(celda => {
+    if (celda.dataset.dia) {
+      celda.textContent = "";
+      celda.className = "";
+    }
+  });
+  ocupado = {};
+  asincronicos = [];
+  alerta.innerHTML = "";
+  alerta.style.display = "none";
+  resumenOnline.innerHTML = "";
+  resumenOnline.style.display = "none";
+
+  // Procesar obligatorios
+  document.querySelectorAll(".selector-obligatorio").forEach(sel => {
+    if (sel.value) pintar(sel.value);
+  });
+
+  // Procesar optativos
+  document.querySelectorAll(".check-optativo:checked").forEach(chk => {
+    if (chk.value) pintar(chk.value);
+  });
+
+  // Mostrar resumen de ramos asincrónicos seleccionados
+  if (asincronicos.length > 0) {
+    resumenOnline.style.display = "block";
+    resumenOnline.innerHTML = "💻 <strong>Ramos Asincrónicos / Online seleccionados (sin choque de horario):</strong><br>• " + asincronicos.join("<br>• ");
+  }
+}
+
+document.querySelectorAll(".selector-obligatorio").forEach(sel => {
+  sel.addEventListener("change", actualizar);
+});
+
+document.querySelectorAll(".check-optativo").forEach(chk => {
+  chk.addEventListener("change", actualizar);
+});
+
+/* CONTROL DE AUDIO MP3 */
+const audio = document.getElementById('bg-music');
+audio.volume = 0.15;
+let isPlaying = false;
+
+document.addEventListener('click', function initAudio() {
+  if (!isPlaying) {
+    audio.play().then(() => {
+      isPlaying = true;
+      document.getElementById('btn-audio').textContent = "Pausar";
+    }).catch(e => console.log("Audio a la espera de interacción"));
+  }
+  document.removeEventListener('click', initAudio);
+}, { once: true });
+
+function toggleAudio() {
+  const btn = document.getElementById('btn-audio');
+  if (isPlaying) {
+    audio.pause();
+    btn.textContent = "Reproducir";
+  } else {
+    audio.play();
+    btn.textContent = "Pausar";
+  }
+  isPlaying = !isPlaying;
+}
+</script>
+</body>
+</html>
