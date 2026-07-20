@@ -68,7 +68,7 @@
 <body>
 
 <div class="header-container">
-  <h2>📘 Generador de Horario - 5to Semestre 2026</h2>
+  <h2>📘 Generador de Horario - 6to Semestre 2026</h2>
   <div class="audio-control">
     <span>🎵 Música de fondo</span>
     <button id="btn-audio" class="audio-btn" onclick="toggleAudio()">Reproducir</button>
@@ -203,7 +203,7 @@
   <tbody id="tabla"></tbody>
 </table>
 
-<!-- Etiqueta de audio MP3 con bucle (loop) activado -->
+<!-- Etiqueta de audio MP3 en bucle -->
 <audio id="bg-music" loop src="musica.mp3"></audio>
 
 <div class="footer">Generador de Horario 2026 | Detección automática de topes de horario activa.</div>
@@ -306,35 +306,22 @@ document.querySelectorAll(".check-optativo").forEach(chk => {
   chk.addEventListener("change", actualizar);
 });
 
-/* CONTROL DE AUDIO MP3 CON LOOP E INICIO SEGURO */
+/* CONTROL DE AUDIO MANUAL LIMPIO */
 const audio = document.getElementById('bg-music');
-audio.volume = 0.15; // Nivel de volumen al 15%
-let isPlaying = false;
+audio.volume = 0.15; // Volumen moderado al 15%
 
-// Inicio automático al primer toque o clic en la pantalla (para Safari / Chrome)
-document.addEventListener('click', function initAudio() {
-  if (!isPlaying) {
-    audio.play().then(() => {
-      isPlaying = true;
-      document.getElementById('btn-audio').textContent = "Pausar";
-    }).catch(err => {
-      console.log("Esperando interacción directa con el botón de reproducción.");
-    });
-  }
-}, { once: true });
-
-// Control del botón manual
 function toggleAudio() {
   const btn = document.getElementById('btn-audio');
+  
   if (audio.paused) {
     audio.play().then(() => {
       btn.textContent = "Pausar";
-      isPlaying = true;
-    }).catch(err => console.log("Error al reproducir audio:", err));
+    }).catch(err => {
+      console.log("Error al reproducir audio:", err);
+    });
   } else {
     audio.pause();
     btn.textContent = "Reproducir";
-    isPlaying = false;
   }
 }
 </script>
