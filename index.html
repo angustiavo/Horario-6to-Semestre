@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generador de Horario - 5to Semestre 2026</title>
+  <title>Generador de Horario - 6to Semestre 2026</title>
   <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; margin: 20px; background-color: #f0f2f5; color: #333; }
     
-    /* Encabezado flex para alinear título y música en la parte superior */
+    /* Encabezado superior */
     .header-container {
       display: flex;
       justify-content: space-between;
@@ -20,7 +20,7 @@
     }
     h2 { color: #1a3a5a; margin: 0; border: none; padding: 0; }
 
-    /* Control de audio integrado en la parte superior */
+    /* Control de audio superior */
     .audio-control {
       background: #1a3a5a;
       color: white;
@@ -203,7 +203,7 @@
   <tbody id="tabla"></tbody>
 </table>
 
-<!-- Audio MP3 local sin anuncios -->
+<!-- Etiqueta de audio MP3 con bucle (loop) activado -->
 <audio id="bg-music" loop src="musica.mp3"></audio>
 
 <div class="footer">Generador de Horario 2026 | Detección automática de topes de horario activa.</div>
@@ -306,31 +306,36 @@ document.querySelectorAll(".check-optativo").forEach(chk => {
   chk.addEventListener("change", actualizar);
 });
 
-/* CONTROL DE AUDIO MP3 */
+/* CONTROL DE AUDIO MP3 CON LOOP E INICIO SEGURO */
 const audio = document.getElementById('bg-music');
-audio.volume = 0.15;
+audio.volume = 0.15; // Nivel de volumen al 15%
 let isPlaying = false;
 
+// Inicio automático al primer toque o clic en la pantalla (para Safari / Chrome)
 document.addEventListener('click', function initAudio() {
   if (!isPlaying) {
     audio.play().then(() => {
       isPlaying = true;
       document.getElementById('btn-audio').textContent = "Pausar";
-    }).catch(e => console.log("Audio a la espera de interacción"));
+    }).catch(err => {
+      console.log("Esperando interacción directa con el botón de reproducción.");
+    });
   }
-  document.removeEventListener('click', initAudio);
 }, { once: true });
 
+// Control del botón manual
 function toggleAudio() {
   const btn = document.getElementById('btn-audio');
-  if (isPlaying) {
+  if (audio.paused) {
+    audio.play().then(() => {
+      btn.textContent = "Pausar";
+      isPlaying = true;
+    }).catch(err => console.log("Error al reproducir audio:", err));
+  } else {
     audio.pause();
     btn.textContent = "Reproducir";
-  } else {
-    audio.play();
-    btn.textContent = "Pausar";
+    isPlaying = false;
   }
-  isPlaying = !isPlaying;
 }
 </script>
 </body>
