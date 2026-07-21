@@ -54,7 +54,7 @@
     .optativo-item { font-size: 12px; background: #ffffff; padding: 8px; border-radius: 4px; border: 1px solid #ddd; display: flex; align-items: flex-start; gap: 8px; }
     .optativo-item input[type="checkbox"] { margin-top: 2px; cursor: pointer; }
     .optativo-item label { font-weight: normal; font-size: 12px; margin-bottom: 0; cursor: pointer; }
-    table { border-collapse: collapse; width: 100%; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+    table { border-collapse: collapse; width: 100%; background: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; margin-bottom: 20px; }
     th, td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 11px; }
     th { background-color: #1a3a5a; color: white; text-transform: uppercase; letter-spacing: 1px; }
     .bloque { background-color: #e3f2fd; font-weight: bold; color: #0d47a1; border: 1px solid #90caf9; }
@@ -62,7 +62,50 @@
     @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
     #alerta { color: #b71c1c; background-color: #ffcdd2; border: 1px solid #ef9a9a; padding: 15px; border-radius: 4px; margin-bottom: 20px; display: none; font-weight: bold; }
     #resumen-online { background-color: #e8f5e9; border: 1px solid #a5d6a7; color: #1b5e20; padding: 10px 15px; border-radius: 4px; margin-bottom: 15px; font-size: 12px; display: none; }
+    
+    /* Panel de Cursos Seleccionados */
+    .resumen-cursos-container {
+      background: #ffffff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-top: 20px;
+    }
+    .resumen-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .curso-card {
+      background: #f8f9fa;
+      border: 1px solid #0d47a1;
+      border-left: 5px solid #1a3a5a;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 12px;
+    }
+    .curso-card strong { color: #1a3a5a; display: block; margin-bottom: 4px; }
+    .btn-guardar {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+    .btn-guardar:hover { background: #1b5e20; }
+
     .footer { margin-top: 20px; font-size: 11px; color: #666; text-align: right; }
+
+    /* Estilo para ocultar botones al guardar/imprimir en PDF */
+    @media print {
+      .controles, .audio-control, .btn-guardar, .footer { display: none !important; }
+      body { background-color: white; margin: 0; }
+    }
   </style>
 </head>
 <body>
@@ -83,67 +126,67 @@
   <div class="grid-obligatorios">
     <div>
       <label>🍰 Alta Pastelería y Repostería (APG1101)</label>
-      <select id="pasteleria" class="selector-obligatorio">
+      <select id="pasteleria" class="selector-obligatorio" data-curso="Alta Pastelería y Repostería">
         <option value="">-- Seleccionar Sección --</option>
-        <option value="Lu-8-13:ALTA PASTELERÍA">APG1101-001D – Díaz (Lu 13:41-18:10)</option>
-        <option value="Lu-1-6:ALTA PASTELERÍA">APG1101-002D – Díaz (Lu 08:31-12:50)</option>
-        <option value="Ma-8-13:ALTA PASTELERÍA">APG1101-003D – Guerrero (Ma 13:41-18:10)</option>
-        <option value="Ma-1-6:ALTA PASTELERÍA">APG1101-004D – Díaz (Ma 08:31-12:50)</option>
-        <option value="Mi-8-13:ALTA PASTELERÍA">APG1101-005D – Tapia (Mi 13:41-18:10)</option>
-        <option value="Mi-1-6:ALTA PASTELERÍA">APG1101-006D – Díaz (Mi 08:31-12:50)</option>
-        <option value="Ju-8-13:ALTA PASTELERÍA">APG1101-007D – Tapia (Ju 13:41-18:10)</option>
-        <option value="Ju-1-6:ALTA PASTELERÍA">APG1101-008D – Díaz (Ju 08:31-12:50)</option>
-        <option value="Vi-1-6:ALTA PASTELERÍA">APG1101-009D – Guerrero (Vi 08:31-12:50)</option>
+        <option value="Lu-8-13:ALTA PASTELERÍA" data-cod="APG1101-001D" data-docente="Díaz">APG1101-001D – Díaz (Lu 13:41-18:10)</option>
+        <option value="Lu-1-6:ALTA PASTELERÍA" data-cod="APG1101-002D" data-docente="Díaz">APG1101-002D – Díaz (Lu 08:31-12:50)</option>
+        <option value="Ma-8-13:ALTA PASTELERÍA" data-cod="APG1101-003D" data-docente="Guerrero">APG1101-003D – Guerrero (Ma 13:41-18:10)</option>
+        <option value="Ma-1-6:ALTA PASTELERÍA" data-cod="APG1101-004D" data-docente="Díaz">APG1101-004D – Díaz (Ma 08:31-12:50)</option>
+        <option value="Mi-8-13:ALTA PASTELERÍA" data-cod="APG1101-005D" data-docente="Tapia">APG1101-005D – Tapia (Mi 13:41-18:10)</option>
+        <option value="Mi-1-6:ALTA PASTELERÍA" data-cod="APG1101-006D" data-docente="Díaz">APG1101-006D – Díaz (Mi 08:31-12:50)</option>
+        <option value="Ju-8-13:ALTA PASTELERÍA" data-cod="APG1101-007D" data-docente="Tapia">APG1101-007D – Tapia (Ju 13:41-18:10)</option>
+        <option value="Ju-1-6:ALTA PASTELERÍA" data-cod="APG1101-008D" data-docente="Díaz">APG1101-008D – Díaz (Ju 08:31-12:50)</option>
+        <option value="Vi-1-6:ALTA PASTELERÍA" data-cod="APG1101-009D" data-docente="Guerrero">APG1101-009D – Guerrero (Vi 08:31-12:50)</option>
       </select>
     </div>
 
     <div>
       <label>🍽️ Cocina de Alta Gama (AAG1101)</label>
-      <select id="cocina" class="selector-obligatorio">
+      <select id="cocina" class="selector-obligatorio" data-curso="Cocina de Alta Gama">
         <option value="">-- Seleccionar Sección --</option>
-        <option value="Lu-1-6:COCINA ALTA GAMA">AAG1101-001D – Aceituno (Lu 08:31-12:50)</option>
-        <option value="Lu-8-13:COCINA ALTA GAMA">AAG1101-002D – Valdivia (Lu 13:41-18:10)</option>
-        <option value="Ma-1-6:COCINA ALTA GAMA">AAG1101-003D – Santamaría (Ma 08:31-12:50)</option>
-        <option value="Ma-8-13:COCINA ALTA GAMA">AAG1101-004D – Carrasco (Ma 13:41-18:10)</option>
-        <option value="Mi-1-6:COCINA ALTA GAMA">AAG1101-005D – Aceituno (Mi 08:31-12:50)</option>
-        <option value="Mi-8-13:COCINA ALTA GAMA">AAG1101-006D – Aceituno (Mi 13:41-18:10)</option>
-        <option value="Ju-1-6:COCINA ALTA GAMA">AAG1101-007D – Santamaría (Ju 08:31-12:50)</option>
-        <option value="Ju-8-13:COCINA ALTA GAMA">AAG1101-008D – Valdivia (Ju 13:41-18:10)</option>
-        <option value="Vi-8-13:COCINA ALTA GAMA">AAG1101-009D – Carrasco (Vi 13:41-18:10)</option>
+        <option value="Lu-1-6:COCINA ALTA GAMA" data-cod="AAG1101-001D" data-docente="Aceituno">AAG1101-001D – Aceituno (Lu 08:31-12:50)</option>
+        <option value="Lu-8-13:COCINA ALTA GAMA" data-cod="AAG1101-002D" data-docente="Valdivia">AAG1101-002D – Valdivia (Lu 13:41-18:10)</option>
+        <option value="Ma-1-6:COCINA ALTA GAMA" data-cod="AAG1101-003D" data-docente="Santamaría">AAG1101-003D – Santamaría (Ma 08:31-12:50)</option>
+        <option value="Ma-8-13:COCINA ALTA GAMA" data-cod="AAG1101-004D" data-docente="Carrasco">AAG1101-004D – Carrasco (Ma 13:41-18:10)</option>
+        <option value="Mi-1-6:COCINA ALTA GAMA" data-cod="AAG1101-005D" data-docente="Aceituno">AAG1101-005D – Aceituno (Mi 08:31-12:50)</option>
+        <option value="Mi-8-13:COCINA ALTA GAMA" data-cod="AAG1101-006D" data-docente="Aceituno">AAG1101-006D – Aceituno (Mi 13:41-18:10)</option>
+        <option value="Ju-1-6:COCINA ALTA GAMA" data-cod="AAG1101-007D" data-docente="Santamaría">AAG1101-007D – Santamaría (Ju 08:31-12:50)</option>
+        <option value="Ju-8-13:COCINA ALTA GAMA" data-cod="AAG1101-008D" data-docente="Valdivia">AAG1101-008D – Valdivia (Ju 13:41-18:10)</option>
+        <option value="Vi-8-13:COCINA ALTA GAMA" data-cod="AAG1101-009D" data-docente="Carrasco">AAG1101-009D – Carrasco (Vi 13:41-18:10)</option>
       </select>
     </div>
 
     <div>
       <label>🗣️ Inglés Elemental II (INU4101)</label>
-      <select id="ingles" class="selector-obligatorio">
+      <select id="ingles" class="selector-obligatorio" data-curso="Inglés Elemental II">
         <option value="">-- Seleccionar Sección --</option>
-        <option value="Mi-6-7:INGLÉS II|Ju-3-4:INGLÉS II">INU4101-001D – Del Pino (Mi 12:11-13:40 / Ju 10:01-11:20)</option>
-        <option value="Lu-10-11:INGLÉS II|Mi-9-10:INGLÉS II">INU4101-002D – Betancourt (Lu 15:11-16:40 / Mi 14:31-15:50)</option>
-        <option value="Lu-8-9:INGLÉS II|Ma-12-13:INGLÉS II">INU4101-003D – Valderas (Lu 13:41-15:10 / Ma 16:41-18:10)</option>
-        <option value="Mi-5-6:INGLÉS II|Vi-3-4:INGLÉS II">INU4101-004D – Fierro (Mi 11:31-12:50 / Vi 10:01-11:20)</option>
+        <option value="Mi-6-7:INGLÉS II|Ju-3-4:INGLÉS II" data-cod="INU4101-001D" data-docente="Del Pino">INU4101-001D – Del Pino (Mi 12:11-13:40 / Ju 10:01-11:20)</option>
+        <option value="Lu-10-11:INGLÉS II|Mi-9-10:INGLÉS II" data-cod="INU4101-002D" data-docente="Betancourt">INU4101-002D – Betancourt (Lu 15:11-16:40 / Mi 14:31-15:50)</option>
+        <option value="Lu-8-9:INGLÉS II|Ma-12-13:INGLÉS II" data-cod="INU4101-003D" data-docente="Valderas">INU4101-003D – Valderas (Lu 13:41-15:10 / Ma 16:41-18:10)</option>
+        <option value="Mi-5-6:INGLÉS II|Vi-3-4:INGLÉS II" data-cod="INU4101-004D" data-docente="Fierro">INU4101-004D – Fierro (Mi 11:31-12:50 / Vi 10:01-11:20)</option>
       </select>
     </div>
 
     <div>
       <label>💡 Innovación Empresas Gastronómicas (DPG1106)</label>
-      <select id="innovacion" class="selector-obligatorio">
+      <select id="innovacion" class="selector-obligatorio" data-curso="Innovación Empresas Gastronómicas">
         <option value="">-- Seleccionar Sección --</option>
-        <option value="Mi-9-11:INNOVACIÓN">DPG1106-001D – Alarcón (Mi 14:31-16:40)</option>
-        <option value="Lu-6-8:INNOVACIÓN">DPG1106-002D – Carrasco (Lu 12:11-14:20)</option>
-        <option value="Ma-9-11:INNOVACIÓN">DPG1106-003D – Olfos (Ma 14:31-16:40)</option>
-        <option value="Vi-6-8:INNOVACIÓN">DPG1106-004D – Olfos (Vi 12:11-14:20)</option>
-        <option value="Ju-9-11:INNOVACIÓN">DPG1106-005D – Olfos (Ju 14:31-16:40)</option>
+        <option value="Mi-9-11:INNOVACIÓN" data-cod="DPG1106-001D" data-docente="Alarcón">DPG1106-001D – Alarcón (Mi 14:31-16:40)</option>
+        <option value="Lu-6-8:INNOVACIÓN" data-cod="DPG1106-002D" data-docente="Carrasco">DPG1106-002D – Carrasco (Lu 12:11-14:20)</option>
+        <option value="Ma-9-11:INNOVACIÓN" data-cod="DPG1106-003D" data-docente="Olfos">DPG1106-003D – Olfos (Ma 14:31-16:40)</option>
+        <option value="Vi-6-8:INNOVACIÓN" data-cod="DPG1106-004D" data-docente="Olfos">DPG1106-004D – Olfos (Vi 12:11-14:20)</option>
+        <option value="Ju-9-11:INNOVACIÓN" data-cod="DPG1106-005D" data-docente="Olfos">DPG1106-005D – Olfos (Ju 14:31-16:40)</option>
       </select>
     </div>
 
     <div>
       <label>🍳 Taller Habilidades Gastronomía III (HGG1103)</label>
-      <select id="habilidades" class="selector-obligatorio">
+      <select id="habilidades" class="selector-obligatorio" data-curso="Taller Habilidades Gastronomía III">
         <option value="">-- Seleccionar Sección --</option>
-        <option value="Ju-5-7:HABILIDADES III">HGG1103-001D – Michaud (Ju 11:31-13:40)</option>
-        <option value="Mi-12-14:HABILIDADES III">HGG1103-002D – Michaud (Mi 16:41-18:50)</option>
-        <option value="Lu-10-12:HABILIDADES III">HGG1103-003D – Michaud (Lu 15:11-17:20)</option>
-        <option value="Mi-7-9:HABILIDADES III">HGG1103-004D – Michaud (Mi 13:01-15:10)</option>
+        <option value="Ju-5-7:HABILIDADES III" data-cod="HGG1103-001D" data-docente="Michaud">HGG1103-001D – Michaud (Ju 11:31-13:40)</option>
+        <option value="Mi-12-14:HABILIDADES III" data-cod="HGG1103-002D" data-docente="Michaud">HGG1103-002D – Michaud (Mi 16:41-18:50)</option>
+        <option value="Lu-10-12:HABILIDADES III" data-cod="HGG1103-003D" data-docente="Michaud">HGG1103-003D – Michaud (Lu 15:11-17:20)</option>
+        <option value="Mi-7-9:HABILIDADES III" data-cod="HGG1103-004D" data-docente="Michaud">HGG1103-004D – Michaud (Mi 13:01-15:10)</option>
       </select>
     </div>
   </div>
@@ -151,39 +194,39 @@
   <div class="seccion-titulo">🎨 Cursos Optativos (Puedes marcar múltiples para evaluar combinación)</div>
   <div class="optativos-container">
     <div class="optativo-item">
-      <input type="checkbox" id="opt1" class="check-optativo" value="Lu-3-5:GASTR. CONSCIENTE|Ju-9-11:GASTR. CONSCIENTE">
+      <input type="checkbox" id="opt1" class="check-optativo" value="Lu-3-5:GASTR. CONSCIENTE|Ju-9-11:GASTR. CONSCIENTE" data-curso="Gastronomía Consciente" data-cod="GCG1101-003D" data-docente="Muñoz">
       <label for="opt1"><strong>GCG1101-003D</strong> – Gastronomía Consciente (Muñoz - Lu 10:01-12:10 / Ju 14:31-16:40)</label>
     </div>
     <div class="optativo-item">
-      <input type="checkbox" id="opt2" class="check-optativo" value="Ju-11-14:INNOV. DESAFÍOS">
+      <input type="checkbox" id="opt2" class="check-optativo" value="Ju-11-14:INNOV. DESAFÍOS" data-curso="Innovación Basada en Desafíos" data-cod="EMP0010-004D" data-docente="Pérez">
       <label for="opt2"><strong>EMP0010-004D</strong> – Innovación Basada en Desafíos (Pérez - Ju 16:01-18:50)</label>
     </div>
     <div class="optativo-item">
-      <input type="checkbox" id="opt3" class="check-optativo" value="Mi-8-12:CULTURA Y GASTR.">
+      <input type="checkbox" id="opt3" class="check-optativo" value="Mi-8-12:CULTURA Y GASTR." data-curso="Cultura y Gastronomía" data-cod="CGT010-002D" data-docente="Farías">
       <label for="opt3"><strong>CGT010-002D</strong> – Cultura y Gastronomía (Farías - Mi 13:41-17:20)</label>
     </div>
     <div class="optativo-item">
-      <input type="checkbox" id="opt4" class="check-optativo" value="Mi-3-4:ALFABETIZACIÓN">
+      <input type="checkbox" id="opt4" class="check-optativo" value="Mi-3-4:ALFABETIZACIÓN" data-curso="Alfabetización Informacional" data-cod="ALI0010-004D" data-docente="Vega">
       <label for="opt4"><strong>ALI0010-004D</strong> – Alfabetización Informacional (Vega - Mi 10:01-11:20)</label>
     </div>
     <div class="optativo-item">
-      <input type="checkbox" id="opt5" class="check-optativo" value="Ma-3-6:INNOV. DESAFÍOS (SYNC)">
+      <input type="checkbox" id="opt5" class="check-optativo" value="Ma-3-6:INNOV. DESAFÍOS (SYNC)" data-curso="Innovación Basada en Desafíos [Online]" data-cod="EMP0010-885D" data-docente="Olivares">
       <label for="opt5"><strong>EMP0010-885D</strong> – Innov. Desafíos [Online Sincrónico] (Olivares - Ma 10:01-12:50)</label>
     </div>
     <div class="optativo-item">
-      <input type="checkbox" id="opt6" class="check-optativo" value="Vi-1-4:MARCA PERSONAL (SYNC)">
+      <input type="checkbox" id="opt6" class="check-optativo" value="Vi-1-4:MARCA PERSONAL (SYNC)" data-curso="Marca Personal [Online]" data-cod="GMP0101-883D" data-docente="Pérez">
       <label for="opt6"><strong>GMP0101-883D</strong> – Marca Personal [Online Sincrónico] (Pérez - Vi 08:31-11:20)</label>
     </div>
     <div class="optativo-item">
-      <input type="checkbox" id="opt7" class="check-optativo" value="ONLINE:BIW0020-003D - Búsqueda Efectiva de Info.">
+      <input type="checkbox" id="opt7" class="check-optativo" value="ONLINE:BIW0020-003D - Búsqueda Efectiva de Info." data-curso="Búsqueda Efectiva de Info." data-cod="BIW0020-003D" data-docente="Valencia">
       <label for="opt7"><strong>BIW0020-003D</strong> – Búsqueda Efectiva de Info. (Valencia - Online Asincrónico)</label>
     </div>
     <div class="optativo-item">
-      <input type="checkbox" id="opt8" class="check-optativo" value="ONLINE:BIW0020-004D - Búsqueda Efectiva de Info.">
+      <input type="checkbox" id="opt8" class="check-optativo" value="ONLINE:BIW0020-004D - Búsqueda Efectiva de Info." data-curso="Búsqueda Efectiva de Info." data-cod="BIW0020-004D" data-docente="Valencia">
       <label for="opt8"><strong>BIW0020-004D</strong> – Búsqueda Efectiva de Info. (Valencia - Online Asincrónico)</label>
     </div>
     <div class="optativo-item">
-      <input type="checkbox" id="opt9" class="check-optativo" value="ONLINE:ALI0010-004D - Alfabetización Informacional (Módulo Asincrónico)">
+      <input type="checkbox" id="opt9" class="check-optativo" value="ONLINE:ALI0010-004D - Alfabetización Informacional (Módulo Asincrónico)" data-curso="Alfabetización Informacional (Asincrónico)" data-cod="ALI0010-004D" data-docente="Vega">
       <label for="opt9"><strong>ALI0010-004D</strong> – Alfabetización Informacional (Parte Asincrónica - Vega)</label>
     </div>
   </div>
@@ -203,7 +246,16 @@
   <tbody id="tabla"></tbody>
 </table>
 
-<!-- Etiqueta de audio MP3 en bucle -->
+<!-- Panel con la Lista Detallada de Asignaturas Seleccionadas -->
+<div class="resumen-cursos-container">
+  <div class="seccion-titulo" style="margin-top:0;">📋 Resumen de Cursos Seleccionados</div>
+  <div id="lista-cursos-detalles" class="resumen-grid">
+    <i style="color: #777; font-size: 12px;">No has seleccionado ninguna asignatura todavía.</i>
+  </div>
+  <button class="btn-guardar" onclick="window.print()">🖨️ Guardar o Imprimir Horario (PDF)</button>
+</div>
+
+<!-- Audio MP3 en bucle -->
 <audio id="bg-music" loop src="musica.mp3"></audio>
 
 <div class="footer">Generador de Horario 2026 | Detección automática de topes de horario activa.</div>
@@ -219,6 +271,8 @@ const dias = ["Lu","Ma","Mi","Ju","Vi"];
 const tabla = document.getElementById("tabla");
 const alerta = document.getElementById("alerta");
 const resumenOnline = document.getElementById("resumen-online");
+const listaDetalles = document.getElementById("lista-cursos-detalles");
+
 let ocupado = {};
 let asincronicos = [];
 
@@ -280,21 +334,57 @@ function actualizar() {
   alerta.style.display = "none";
   resumenOnline.innerHTML = "";
   resumenOnline.style.display = "none";
+  
+  let HTMLCursos = "";
 
   // Procesar obligatorios
   document.querySelectorAll(".selector-obligatorio").forEach(sel => {
-    if (sel.value) pintar(sel.value);
+    if (sel.value) {
+      pintar(sel.value);
+      const opt = sel.options[sel.selectedIndex];
+      const curso = sel.dataset.curso;
+      const cod = opt.dataset.cod || "";
+      const docente = opt.dataset.docente || "";
+      
+      HTMLCursos += `
+        <div class="curso-card">
+          <strong>📖 ${curso}</strong>
+          <div><b>Código/Sección:</b> ${cod}</div>
+          <div><b>Docente:</b> ${docente}</div>
+        </div>
+      `;
+    }
   });
 
   // Procesar optativos
   document.querySelectorAll(".check-optativo:checked").forEach(chk => {
-    if (chk.value) pintar(chk.value);
+    if (chk.value) {
+      pintar(chk.value);
+      const curso = chk.dataset.curso;
+      const cod = chk.dataset.cod || "";
+      const docente = chk.dataset.docente || "";
+
+      HTMLCursos += `
+        <div class="curso-card">
+          <strong>🎨 ${curso}</strong>
+          <div><b>Código/Sección:</b> ${cod}</div>
+          <div><b>Docente:</b> ${docente}</div>
+        </div>
+      `;
+    }
   });
 
-  // Mostrar resumen de ramos asincrónicos seleccionados
+  // Mostrar tarjetas de detalle
+  if (HTMLCursos !== "") {
+    listaDetalles.innerHTML = HTMLCursos;
+  } else {
+    listaDetalles.innerHTML = `<i style="color: #777; font-size: 12px;">No has seleccionado ninguna asignatura todavía.</i>`;
+  }
+
+  // Mostrar resumen de ramos asincrónicos
   if (asincronicos.length > 0) {
     resumenOnline.style.display = "block";
-    resumenOnline.innerHTML = "💻 <strong>Ramos Asincrónicos / Online seleccionados (sin choque de horario):</strong><br>• " + asincronicos.join("<br>• ");
+    resumenOnline.innerHTML = "💻 <strong>Ramos Asincrónicos / Online seleccionados:</strong><br>• " + asincronicos.join("<br>• ");
   }
 }
 
